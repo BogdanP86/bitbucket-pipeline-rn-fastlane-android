@@ -1,6 +1,6 @@
 FROM tamasbarta/docker-android-sdk
 
-LABEL maintainer "legolas8911@gmail.com"
+LABEL maintainer "bogdan@creditstacks.com"
 
 ENV DEBIAN_FRONTEND noninteractive
 
