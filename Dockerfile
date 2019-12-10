@@ -20,11 +20,14 @@ ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 9.9.0
 
 #Ruby
-ENV RUBY_MAJOR 2.3
-ENV RUBY_VERSION 2.3.3
+ENV RUBY_MAJOR 2.4
+ENV RUBY_VERSION 2.4.0
 ENV RUBY_DOWNLOAD_SHA256 1a4fa8c2885734ba37b97ffdb4a19b8fba0e8982606db02d936e65bac07419dc
 ENV RUBYGEMS_VERSION 2.6.10
 ENV BUNDLER_VERSION 1.14.3
+
+#fastlane
+ENV FASTLANE_VERSION 2.137.0
 
 
 ################################################################################################
@@ -152,8 +155,7 @@ RUN apt-get install -y rubygems rubygems-integration ruby-all-dev ruby-dev build
 ###
 ### Install Fastlane and plugins
 ###
-
-RUN gem install fastlane -NV \
+RUN gem install fastlane:$FASTLANE_VERSION -NV \
   && gem install fastlane-plugin-appicon fastlane-plugin-android_change_string_app_name fastlane-plugin-humanable_build_number \
   && gem update --system "$RUBYGEMS_VERSION"
 
