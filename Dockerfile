@@ -46,8 +46,11 @@ RUN dpkg --add-architecture i386 \
 
 
 # RUBY
-RUN apt-get install -y ruby:$RUBY_VERSION \
-    ruby-dev
+# install RVM, Ruby, and Bundler
+RUN \curl -L https://get.rvm.io | bash -s stable
+RUN /bin/bash -l -c "rvm requirements"
+RUN /bin/bash -l -c "rvm install 2.0"
+RUN /bin/bash -l -c "gem install bundler --no-ri --no-rdoc"
 
 ################################################################################################
 ###
