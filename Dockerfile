@@ -46,7 +46,7 @@ RUN dpkg --add-architecture i386 \
 
 
 # RUBY
-RUN ruby:$RUBY_VERSION \
+RUN apt-get install -y ruby:$RUBY_VERSION \
     ruby-dev
 
 ################################################################################################
