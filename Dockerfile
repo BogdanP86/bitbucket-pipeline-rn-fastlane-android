@@ -35,7 +35,7 @@ ENV BUNDLER_VERSION 1.14.3
 # Dependencies
 RUN dpkg --add-architecture i386 \
   && apt-get update \
-  && apt-get install -yq libstdc++6:i386 zlib1g:i386 libncurses5:i386 ant maven openssl libssl-dev --no-install-recommends
+  && apt-get install -yq libstdc++6:i386 zlib1g:i386 libncurses5:i386 ant maven openssl libssl-dev --no-install-recommends ruby ruby-dev
   # && curl -L ${GRADLE_URL} -o /tmp/gradle-4.4-all.zip \
   # && unzip /tmp/gradle-4.4-all.zip -d /usr/local \
   # && rm /tmp/gradle-4.4-all.zip \
@@ -83,56 +83,56 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 ###
 
 # skip installing gem documentation
- RUN mkdir -p /usr/local/etc \
-   && { \
-     echo 'install: --no-document'; \
-     echo 'update: --no-document'; \
-   } >> /usr/local/etc/gemrc
+# RUN mkdir -p /usr/local/etc \
+#   && { \
+#     echo 'install: --no-document'; \
+#     echo 'update: --no-document'; \
+#   } >> /usr/local/etc/gemrc
 
- # some of ruby's build scripts are written in ruby
- #   we purge system ruby later to make sure our final image uses what we just built
- RUN set -ex \
-   \
-   && buildDeps=' \
-     bison \
-     libgdbm-dev \
-     ruby \
-     autoconf bison build-essential libssl-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev \
-   ' \
-   && apt-get install -y libtool libyaml-dev imagemagick \
-   && apt-get install -y --no-install-recommends $buildDeps \
-   && rm -rf /var/lib/apt/lists/* \
-   \
-   && wget -O ruby.tar.xz "https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-$RUBY_VERSION.tar.xz" \
-   && echo "$RUBY_DOWNLOAD_SHA256 *ruby.tar.xz" | sha256sum -c - \
-   \
-   && mkdir -p /usr/src/ruby \
-   && tar -xJf ruby.tar.xz -C /usr/src/ruby --strip-components=1 \
-   && rm ruby.tar.xz \
-   \
-   && cd /usr/src/ruby \
-   \
- # hack in "ENABLE_PATH_CHECK" disabling to suppress:
- #   warning: Insecure world writable dir
-   && { \
-     echo '#define ENABLE_PATH_CHECK 0'; \
-     echo; \
-     cat file.c; \
-   } > file.c.new \
-   && mv file.c.new file.c \
-   \
-   && autoconf \
-   && ./configure --disable-install-doc --enable-shared --with-openssl-dir=/usr/bin \
-   && make -j"$(nproc)" \
-   && make install \
-   \
-   && cd / \
-   && rm -r /usr/src/ruby \
-   \
-   && gem update --system "$RUBYGEMS_VERSION"
+# # some of ruby's build scripts are written in ruby
+# #   we purge system ruby later to make sure our final image uses what we just built
+# RUN set -ex \
+#   \
+#   && buildDeps=' \
+#     bison \
+#     libgdbm-dev \
+#     ruby \
+#     autoconf bison build-essential libssl-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev \
+#   ' \
+#   && apt-get install -y libtool libyaml-dev imagemagick \
+#   && apt-get install -y --no-install-recommends $buildDeps \
+#   && rm -rf /var/lib/apt/lists/* \
+#   \
+#   && wget -O ruby.tar.xz "https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-$RUBY_VERSION.tar.xz" \
+#   && echo "$RUBY_DOWNLOAD_SHA256 *ruby.tar.xz" | sha256sum -c - \
+#   \
+#   && mkdir -p /usr/src/ruby \
+#   && tar -xJf ruby.tar.xz -C /usr/src/ruby --strip-components=1 \
+#   && rm ruby.tar.xz \
+#   \
+#   && cd /usr/src/ruby \
+#   \
+# # hack in "ENABLE_PATH_CHECK" disabling to suppress:
+# #   warning: Insecure world writable dir
+#   && { \
+#     echo '#define ENABLE_PATH_CHECK 0'; \
+#     echo; \
+#     cat file.c; \
+#   } > file.c.new \
+#   && mv file.c.new file.c \
+#   \
+#   && autoconf \
+#   && ./configure --disable-install-doc --enable-shared --with-openssl-dir=/usr/bin \
+#   && make -j"$(nproc)" \
+#   && make install \
+#   \
+#   && cd / \
+#   && rm -r /usr/src/ruby \
+#   \
+#   && gem update --system "$RUBYGEMS_VERSION"
 
 
- RUN gem install bundler --version "$BUNDLER_VERSION"
+# RUN gem install bundler --version "$BUNDLER_VERSION"
 
 # # install things globally, for great justice
 # # and don't create ".bundle" in all our apps
