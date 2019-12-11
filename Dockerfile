@@ -35,7 +35,7 @@ ENV BUNDLER_VERSION 1.14.3
 # Dependencies
 RUN dpkg --add-architecture i386 \
   && apt-get update \
-  && apt-get install -yq libstdc++6:i386 zlib1g:i386 libncurses5:i386 ant maven openssl libssl-dev --no-install-recommends ruby ruby-dev
+  && apt-get install -yq libstdc++6:i386 zlib1g:i386 libncurses5:i386 ant maven openssl libssl-dev --no-install-recommends
   # && curl -L ${GRADLE_URL} -o /tmp/gradle-4.4-all.zip \
   # && unzip /tmp/gradle-4.4-all.zip -d /usr/local \
   # && rm /tmp/gradle-4.4-all.zip \
@@ -44,6 +44,10 @@ RUN dpkg --add-architecture i386 \
   # && ln -s /usr/local/android-sdk-linux /usr/local/opt/android-sdk \
   # && (while sleep 3; do echo "y"; done) | ${ANDROID_HOME}/tools/android update sdk --no-ui --all --filter "${ANDROID_SDK_COMPONENTS}"
 
+
+# RUBY
+RUN ruby:$RUBY_VERSION \
+    ruby-dev
 
 ################################################################################################
 ###
