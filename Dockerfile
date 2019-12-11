@@ -45,13 +45,6 @@ RUN dpkg --add-architecture i386 \
   # && (while sleep 3; do echo "y"; done) | ${ANDROID_HOME}/tools/android update sdk --no-ui --all --filter "${ANDROID_SDK_COMPONENTS}"
 
 
-# RUBY
-# install RVM, Ruby, and Bundler
-RUN \curl -L https://get.rvm.io | bash -s stable
-RUN /bin/bash -l -c "rvm requirements"
-RUN /bin/bash -l -c "rvm install 2.6.0"
-RUN /bin/bash -l -c "gem install bundler --no-ri --no-rdoc"
-
 ################################################################################################
 ###
 ### Install NodeJS & NPM
@@ -150,6 +143,13 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
    BUNDLE_APP_CONFIG="$GEM_HOME"
  RUN mkdir -p "$GEM_HOME" "$BUNDLE_BIN" \
    && chmod 777 "$GEM_HOME" "$BUNDLE_BIN"
+
+# RUBY
+# install RVM, Ruby, and Bundler
+RUN \curl -L https://get.rvm.io | bash -s stable
+RUN /bin/bash -l -c "rvm requirements"
+RUN /bin/bash -l -c "rvm install 2.6.0"
+RUN /bin/bash -l -c "gem install bundler --no-ri --no-rdoc"
 
 # # Path
 # ENV PATH $PATH:$BUNDLE_BIN:${ANDROID_HOME}/tools:$ANDROID_HOME/platform-tools:${GRADLE_HOME}/bin
